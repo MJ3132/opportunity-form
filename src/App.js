@@ -11,6 +11,9 @@ import DateFnsUtils from '@date-io/date-fns';
 
 // import DatePicker from "react-datepicker";
 
+// google geolocation
+
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -95,12 +98,29 @@ class App extends Component {
     amount: Number,
     // user: [],
     labelWidth: 0,
+
+
+    gmapsLoaded: false,
   }
 
   componentwillMount() {
     this.setState({
       labelWidth: ReactDOM.findDOMNode(this.InputLabelRef.current).offsetWidth,
     });
+  }
+
+  componentDidMount () {
+    window.initMap = this.initMap
+    const gmapScriptEl = document.createElement(`script`)
+    gmapScriptEl.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDz5KnX_tc4rh8ufy9J0lPO7QuSyhymZlk&libraries=places&callback=initMap`
+    document.querySelector(`body`).insertAdjacentElement(`beforeend`, gmapScriptEl)
+  }
+  
+
+  initMap = () => {
+    this.setState({
+      gmapsLoaded: true,
+    })
   }
 
   handleChange(event) {
@@ -111,34 +131,25 @@ class App extends Component {
   }
 
 
-  // handleChange = ({ startDate, endDate }) => {
-  //   startDate = startDate || this.state.startDate
-  //   endDate = endDate || this.state.endDate
-  //   if (startDate.isAfter(endDate)) {
-  //     endDate = startDate
-  //   }
-
-  //   this.setState({ startDate, endDate })
-  // }
-
-  // handleStart = (startDate) => {
-  //  this.setState({
-  //    startDate : startDate
-  //  })
-  // }
-
-  // handleEnd = (endDate) => {
-  //   this.setState({
-  //     endDate : endDate
-  //   })
-  // }
-
 
   handleDateChange = date => {
     this.setState({ startDate: date });
   };
 
 
+
+  handleSelect = address => {
+    geocodeByAddress(address)
+      .then(results => getLatLng(results[0]))
+      .then(latLng => console.log('Success', latLng))
+      .catch(error => console.error('Error', error));
+  }
+
+  
+  handleLocationChange = address => {
+    this.setState({ location: address });
+
+  }
   render() {
 
 
@@ -366,7 +377,6 @@ class App extends Component {
                     variant="filled"
                   />
 
-
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <Grid container className={classes.grid} justify="space-around">
           <DatePicker
@@ -383,8 +393,57 @@ class App extends Component {
           />
         </Grid>
       </MuiPickersUtilsProvider>
+      <PlacesAutocomplete
+                  value={this.state.location}
+                  onChange={this.handleLocationChange.bind(this)}
+                  onSelect={this.handleSelect.bind(this)}
+                  
+                >
+                  {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                    <div>
+                      <input
+                        {...getInputProps({
+                          placeholder: 'Enter Postal Code',
+                          // className: 'location-search-input',
+                        })}
+                      />
+
+                      <div className="autocomplete-dropdown-container">
+                        {loading && <div>Loading...</div>}
+                        {suggestions.map(suggestion => {
+                          const className = suggestion.active
+                            ? 'suggestion-item--active'
+                            : 'suggestion-item';
+                          // inline style for demonstration purpose
+                          const style = suggestion.active
+                            ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+                            : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                          return (
+                            <div
+                              {...getSuggestionItemProps(suggestion, {
+                                className,
+                                style,
+                              })}
+                            >
+                              <span>{suggestion.description}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </PlacesAutocomplete>
+
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+
 
 </>
+
+
             
               )
 
