@@ -69,8 +69,7 @@ class App extends Component {
     description: "",
     urlWebsite: "",
     backgroundImage: "",
-
-
+   
     //multiselect
 
     industryValues: [],
@@ -80,20 +79,43 @@ class App extends Component {
     companyModel: [],
     countries: [],
 
+
+    financing: "",
+    financeAmount: Number,
+
     //date picker
 
 
+    //Events
     startDate: new Date('2014-08-18T21:11:54'),
-    endDate: null,
+    endDate: new Date('2014-08-18T21:11:54'),
+    location: "",
 
+
+
+    // Pitch Competitions
+    prize: "",
+    dateDeadline: new Date('2014-08-18T21:11:54'),
+
+
+
+    // Grant Amount
+
+    grantAmount : Number,
+
+
+
+
+    //  Innovation Challenges
+
+    objective : "",
 
 
     show: false,
 
 
-    location: "",
 
-    imageUrl: "",
+ 
     loading: false,
     amount: Number,
     // user: [],
@@ -109,13 +131,13 @@ class App extends Component {
     });
   }
 
-  componentDidMount () {
+  componentDidMount() {
     window.initMap = this.initMap
     const gmapScriptEl = document.createElement(`script`)
-    gmapScriptEl.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDz5KnX_tc4rh8ufy9J0lPO7QuSyhymZlk&libraries=places&callback=initMap`
+    gmapScriptEl.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCIwrwTzpiNbYCNE3IrYNEeElIluiUrV8c&libraries=places&callback=initMap`
     document.querySelector(`body`).insertAdjacentElement(`beforeend`, gmapScriptEl)
   }
-  
+
 
   initMap = () => {
     this.setState({
@@ -130,13 +152,21 @@ class App extends Component {
     })
   }
 
+  event
 
-
-  handleDateChange = date => {
+  handleDateSChange = date => {
     this.setState({ startDate: date });
   };
 
 
+  handleDateEChange = date => {
+    this.setState({ endDate: date });
+  };
+
+
+  handleDeadline = date => {
+    this.setState({ dateDeadline: date });
+  };
 
   handleSelect = address => {
     geocodeByAddress(address)
@@ -145,7 +175,7 @@ class App extends Component {
       .catch(error => console.error('Error', error));
   }
 
-  
+
   handleLocationChange = address => {
     this.setState({ location: address });
 
@@ -217,14 +247,12 @@ class App extends Component {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            <MenuItem value="Debt Financing">Debt Financing</MenuItem>
-            <MenuItem value="Equity Financing">Equity Financing</MenuItem>
             <MenuItem value="Events">Events</MenuItem>
             <MenuItem value="Pitch Competitions">Pitch Competitions</MenuItem>
             <MenuItem value="Innovation Challenges">Innovation Challenges</MenuItem>
             <MenuItem value="Pitch Competitions">Pitch Competitions</MenuItem>
             <MenuItem value="Grants">Grants</MenuItem>
-            <MenuItem value="Hackathon">Hackathons</MenuItem>
+            <MenuItem value="Hackathons">Hackathons</MenuItem>
 
           </Select>
         </FormControl>
@@ -299,7 +327,7 @@ class App extends Component {
 
 
         <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="select-multiple-checkbox" > • Industry (multiselect from predefined list)</InputLabel>
+          <InputLabel htmlFor="select-multiple-checkbox" > • Stages (multiselect from predefined list)</InputLabel>
           <Select
             multiple
             name="companyStage"
@@ -363,88 +391,142 @@ class App extends Component {
           </Select>
         </FormControl>
 
+
+
+        <FormControl className={classes.formControl}>
+
+          <InputLabel ref={this.InputLabelRef} htmlFor="company-simple"> •Financing</InputLabel>
+          <Select
+            onChange={this.handleChange.bind(this)}
+            value={this.state.financing}
+            name="company"
+            inputProps={{
+              id: 'company-simple',
+              // name :'opportunity'
+            }}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value="Loans">Debt Financing</MenuItem>
+            <MenuItem value="Partnerships">Equity Financing</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl className={classes.formControl}>
+          <InputLabel htmlFor="financeAmount" > Funding Amount</InputLabel>
+          <Input
+            value={this.state.financeAmount}
+            onChange={this.handleChange.bind(this)}
+            type="number" name="financeAmount"
+            min="1"
+            size="100"
+          />
+        </FormControl>
+
         {(() => {
           switch (this.state.opportunity) {
             case "Events":
               return (
 
                 <>
-                  <TextField
-                    id="filled-dense"
-                    label="Opportunity Name"
-                    // className={classes.FormControl}
-                    margin="dense"
-                    variant="filled"
-                  />
 
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Grid container className={classes.grid} justify="space-around">
-          <DatePicker
-            margin="normal"
-            label="Date picker"
-            value={this.StartDate}
-            onChange={this.handleDateChange}
-          />
-          <TimePicker
-            margin="normal"
-            label="Time picker"
-            value={this.startDate}
-            onChange={this.handleDateChange}
-          />
-        </Grid>
-      </MuiPickersUtilsProvider>
-      <PlacesAutocomplete
-                  value={this.state.location}
-                  onChange={this.handleLocationChange.bind(this)}
-                  onSelect={this.handleSelect.bind(this)}
-                  
-                >
-                  {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                    <div>
-                      <input
-                        {...getInputProps({
-                          placeholder: 'Enter Postal Code',
-                          // className: 'location-search-input',
-                        })}
+
+
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid container className={classes.grid} justify="space-around">
+                      <DatePicker
+                        margin="normal"
+                        label="Start Date"
+                        value={this.state.startDate}
+                        onChange={this.handleDateSChange.bind(this)}
                       />
+                      <TimePicker
+                        margin="normal"
+                        label="Start Time"
+                        value={this.state.startDate}
+                        onChange={this.handleDateSChange.bind(this)}
+                      />
+                    </Grid>
+                  </MuiPickersUtilsProvider>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid container className={classes.grid} justify="space-around">
+                      <DatePicker
+                        margin="normal"
+                        label="End Date"
+                        value={this.state.endDate}
+                        onChange={this.handleDateEChange}
+                      />
+                      <TimePicker
+                        margin="normal"
+                        label="End Time"
+                        value={this.state.endDate}
+                        onChange={this.handleDateEChange}
+                      />
+                    </Grid>
+                  </MuiPickersUtilsProvider>
 
-                      <div className="autocomplete-dropdown-container">
-                        {loading && <div>Loading...</div>}
-                        {suggestions.map(suggestion => {
-                          const className = suggestion.active
-                            ? 'suggestion-item--active'
-                            : 'suggestion-item';
-                          // inline style for demonstration purpose
-                          const style = suggestion.active
-                            ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                            : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                          return (
-                            <div
-                              {...getSuggestionItemProps(suggestion, {
-                                className,
-                                style,
-                              })}
-                            >
-                              <span>{suggestion.description}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </PlacesAutocomplete>
+                  <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="amount" > • Tickets </InputLabel>
+                    <Input
+                      value={this.state.amount}
+                      onChange={this.handleChange.bind(this)}
+                      type="number" name="amount"
+                      min="1"
+                      size="100"
+                    />
+                  </FormControl>
 
-                  <br/>
-                  <br/>
-                  <br/>
-                  <br/>
-                  <br/>
+                  <FormControl className={classes.formControl}>
+                    <PlacesAutocomplete
+                      value={this.state.location}
+                      onChange={this.handleLocationChange.bind(this)}
+                      onSelect={this.handleSelect.bind(this)}
+
+                    >
+                      {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                        <div style={{ display: 'flex', flexDirection: "column", width: "100%" }}>
+                          <input style={{ width: '100%', display: 'block', textAlign: "center" }}
+                            {...getInputProps({
+                              placeholder: 'Enter Postal Code or Adress of The Event',
+                              // className: 'location-search-input',
+                            })}
+                          />
+
+                          <div className="autocomplete-dropdown-container">
+                            {loading && <div>Loading...</div>}
+                            {suggestions.map(suggestion => {
+                              const className = suggestion.active
+                                ? 'suggestion-item--active'
+                                : 'suggestion-item';
+                              // inline style for demonstration purpose
+                              const style = suggestion.active
+                                ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+                                : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                              return (
+                                <div
+                                  {...getSuggestionItemProps(suggestion, {
+                                    className,
+                                    style,
+                                  })}
+                                >
+                                  <span>{suggestion.description}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </PlacesAutocomplete>
+                  </FormControl>
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                  <br />
 
 
-</>
+                </>
 
-
-            
               )
 
             case "Equity Financing":
@@ -452,15 +534,222 @@ class App extends Component {
             case "ddd":
               return
             case "Pitch Competitions":
-              return
+              return (
+                <>
+
+                  <TextField
+                    id="filled-dense"
+                    label="Pitch prize (text area)"
+                    onChange={this.handleChange.bind(this)}
+                    margin="dense"
+                    variant="filled"
+                    name="prize"
+                  />
+
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid container className={classes.grid} justify="space-around">
+                      <DatePicker
+                        margin="normal"
+                        label="Deadline day"
+                        value={this.state.dateDeadline}
+                        onChange={this.handleDeadline.bind(this)}
+                        name="dateDeadline"
+                      />
+                      <TimePicker
+                        margin="normal"
+                        label="Deadline time"
+                        value={this.state.dateDeadline}
+                        onChange={this.handleDeadline.bind(this)}
+                        name="dateDeadline"
+
+                      />
+                    </Grid>
+                  </MuiPickersUtilsProvider>
+
+
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid container className={classes.grid} justify="space-around">
+                      <DatePicker
+                        margin="normal"
+                        label="Start Date"
+                        value={this.state.startDate}
+                        onChange={this.handleDateChange}
+                        name="deadline"
+                      />
+                      <TimePicker
+                        margin="normal"
+                        label="Start Time"
+                        value={this.state.startDate}
+                        onChange={this.handleDateChange}
+                      />
+                    </Grid>
+                  </MuiPickersUtilsProvider>
+
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid container className={classes.grid} justify="space-around">
+                      <DatePicker
+                        margin="normal"
+                        label="End Date"
+                        value={this.state.endDate}
+                        onChange={this.handleDateEChange}
+                      />
+                      <TimePicker
+                        margin="normal"
+                        label="End Time"
+                        value={this.state.endDate}
+                        onChange={this.handleDateEChange}
+                      />
+                    </Grid>
+                  </MuiPickersUtilsProvider>
+
+                </>
+
+
+
+              )
             case "Innovation Challenges":
-              return
-            case "Pitch Competitions":
-              return
+              return (
+                <>
+                <TextField
+                id="filled-dense"
+                label="Innovation Prize (text area)"
+                onChange={this.handleChange.bind(this)}
+                margin="dense"
+                variant="filled"
+                name="prize"
+              />
+
+              <TextField
+              id="filled-dense"
+              label="Objective (text area)"
+              onChange={this.handleChange.bind(this)}
+              margin="dense"
+              variant="filled"
+              name="objective"
+            />
+
+              </>
+
+              )
+
             case "Grants":
-              return
+              return (
+
+                <>
+
+                  <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="grantAmount" > Grant Amount</InputLabel>
+                    <Input
+                      value={this.state.grantAmount}
+                      onChange={this.handleChange.bind(this)}
+                      type="number" name="grantAmount"
+                      min="1"
+                      size="100"
+                    />
+                  </FormControl>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid container className={classes.grid} justify="space-around">
+                      <DatePicker
+                        margin="normal"
+                        label="Deadline day"
+                        value={this.state.dateDeadline}
+                        onChange={this.handleDeadline.bind(this)}
+                        name="dateDeadline"
+                      />
+                      <TimePicker
+                        margin="normal"
+                        label="Deadline time"
+                        value={this.state.dateDeadline}
+                        onChange={this.handleDeadline.bind(this)}
+                        name="dateDeadline"
+
+                      />
+                    </Grid>
+                  </MuiPickersUtilsProvider>
+
+                </>
+
+              )
             case "Hackathons":
-              return
+              return (
+                <>
+                  <TextField
+                id="filled-dense"
+                label="Hackathon Prize (text area)"
+                onChange={this.handleChange.bind(this)}
+                margin="dense"
+                variant="filled"
+                name="prize"
+              />
+
+                   <TextField
+              id="filled-dense"
+              label=" Hackathon Objective (text area)"
+              onChange={this.handleChange.bind(this)}
+              margin="dense"
+              variant="filled"
+              name="objective"
+            />
+
+                       <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid container className={classes.grid} justify="space-around">
+                      <DatePicker
+                        margin="normal"
+                        label="Deadline day"
+                        value={this.state.dateDeadline}
+                        onChange={this.handleDeadline.bind(this)}
+                        name="dateDeadline"
+                      />
+                      <TimePicker
+                        margin="normal"
+                        label="Deadline time"
+                        value={this.state.dateDeadline}
+                        onChange={this.handleDeadline.bind(this)}
+                        name="dateDeadline"
+
+                      />
+                    </Grid>
+                  </MuiPickersUtilsProvider>
+
+
+                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid container className={classes.grid} justify="space-around">
+                      <DatePicker
+                        margin="normal"
+                        label="Start Date"
+                        value={this.state.startDate}
+                        onChange={this.handleDateChange}
+                        name="deadline"
+                      />
+                      <TimePicker
+                        margin="normal"
+                        label="Start Time"
+                        value={this.state.startDate}
+                        onChange={this.handleDateChange}
+                      />
+                    </Grid>
+                  </MuiPickersUtilsProvider>
+
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid container className={classes.grid} justify="space-around">
+                      <DatePicker
+                        margin="normal"
+                        label="End Date"
+                        value={this.state.endDate}
+                        onChange={this.handleDateEChange}
+                      />
+                      <TimePicker
+                        margin="normal"
+                        label="End Time"
+                        value={this.state.endDate}
+                        onChange={this.handleDateEChange}
+                      />
+                    </Grid>
+                  </MuiPickersUtilsProvider>
+
+                </>
+
+              )
             default:
               return null;
           }
