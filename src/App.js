@@ -3,7 +3,7 @@ import { FormControl, Input, Button, TextField, Select, Chip, MenuItem, Checkbox
 import { withStyles } from '@material-ui/core/styles';
 import ReactDOM from 'react-dom';
 import { MuiPickersUtilsProvider, TimePicker, DatePicker } from 'material-ui-pickers';
-
+import UserOutput from './components/UserOutput';
 //date
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
@@ -29,12 +29,14 @@ const countries = ['France', 'Canada', 'USA', 'England', 'China'];
 const styles = theme => ({
   root: {
     display: 'flex',
-
+    // background:'url("https://images.unsplash.com/photo-1531058020387-3be344556be6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80")',
     // flexWrap: 'nowrap',
     flexDirection: 'column',
+    opacity: '0.87',
     margin: '1%',
-    width: '40%',
-    border: '5px solid blue'
+    width: '45%',
+    border: '5px solid  #45A29E ',
+    background:"white"
   },
   formControl: {
     margin: theme.spacing.unit,
@@ -42,6 +44,11 @@ const styles = theme => ({
   },
   selectEmpty: {
     marginTop: theme.spacing.unit * 2,
+  },
+
+
+  button: {
+    margin: theme.spacing.unit,
   },
 
 
@@ -65,11 +72,11 @@ class App extends Component {
 
 
     //text
-
+    opportunityName:"Title",
     description: "",
     urlWebsite: "",
-    backgroundImage: "",
-   
+    backgroundImage:"https://images.unsplash.com/photo-1464647894560-76b09dcee6b3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80",
+
     //multiselect
 
     industryValues: [],
@@ -101,21 +108,21 @@ class App extends Component {
 
     // Grant Amount
 
-    grantAmount : Number,
+    grantAmount: Number,
 
 
 
 
     //  Innovation Challenges
 
-    objective : "",
+    objective: "",
 
 
     show: false,
 
 
 
- 
+
     loading: false,
     amount: Number,
     // user: [],
@@ -165,7 +172,7 @@ class App extends Component {
 
 
   handleDeadline = date => {
-    this.setState({ dateDeadline: date });
+    this.setState({ dateDeadline:date });
   };
 
   handleSelect = address => {
@@ -202,14 +209,26 @@ class App extends Component {
 
     return (
 
+      <>
+      <Grid
+  style={{background:'url(https://i1.wp.com/news.canningspurple.com.au/wp-content/uploads/2018/02/180131-CPA-6-Tips-Working-the-Podium-at-Conferences.jpg?fit=1920%2C848&ssl=1)no-repeat center center',backgroundSize:"cover"}}
+  container
+  direction="row"
+  justify="space-between"
+  alignItems="flex-start"
+>   
 
 
 
       <form className={classes.root} autoComplete="on">
 
+         <FormControl className={classes.formControl}>
+        <img src="http://startupfuel.tv/wp-content/uploads/2018/12/abtract-colours-logo-1.png" />
+              </FormControl>
 
-        <FormControl className={classes.formControl}>
+      <FormControl className={classes.formControl}>
 
+     
           <InputLabel ref={this.InputLabelRef} htmlFor="company-simple">Affiliated Company</InputLabel>
           <Select
             on
@@ -261,7 +280,9 @@ class App extends Component {
           <TextField
             id="filled-dense"
             label="Opportunity Name"
+            name="opportunityName"
             // className={classes.FormControl}
+            onChange={this.handleChange.bind(this)}
             margin="dense"
             variant="filled"
           />
@@ -271,11 +292,12 @@ class App extends Component {
             required
             id="filled-multiline-flexible"
             label="Description"
+            name="description"
             multiline
             rowsMax="4"
-            value={this.state.multiline}
-            // onChange={this.handleChange('multiline')}
-            // className={classes.textField}
+            // value={this.state.description}
+            onChange={this.handleChange.bind(this)}
+            className={classes.textField}
             margin="normal"
             // helperText="hello"
             variant="filled"
@@ -292,13 +314,28 @@ class App extends Component {
           />
         </FormControl>
 
+
+
+          
         <FormControl className={classes.formControl}>
-          <TextField
-            id="filled-dense"
-            label="Background Image URL"
-            // className={classNames(classes.textField, classes.dense)}
-            margin="dense"
-            variant="filled"
+        <Input
+                  name="backgroundImage"
+                  onChange={this.handleChange.bind(this)}
+                  type="url" placeholder="background Img URL" required
+                  size="100"
+                />
+
+          </FormControl>
+
+        <FormControl className={classes.formControl}>
+          <input
+            // accept="image/*"
+            name="backgroundImage"
+            onChange={this.handleChange.bind(this)}
+            className={classes.input}
+            id="outlined-button-file"
+            multiple
+            type="file"
           />
         </FormControl>
 
@@ -518,6 +555,8 @@ class App extends Component {
                       )}
                     </PlacesAutocomplete>
                   </FormControl>
+
+              
                   <br />
                   <br />
                   <br />
@@ -610,25 +649,25 @@ class App extends Component {
             case "Innovation Challenges":
               return (
                 <>
-                <TextField
-                id="filled-dense"
-                label="Innovation Prize (text area)"
-                onChange={this.handleChange.bind(this)}
-                margin="dense"
-                variant="filled"
-                name="prize"
-              />
+                  <TextField
+                    id="filled-dense"
+                    label="Innovation Prize (text area)"
+                    onChange={this.handleChange.bind(this)}
+                    margin="dense"
+                    variant="filled"
+                    name="prize"
+                  />
 
-              <TextField
-              id="filled-dense"
-              label="Objective (text area)"
-              onChange={this.handleChange.bind(this)}
-              margin="dense"
-              variant="filled"
-              name="objective"
-            />
+                  <TextField
+                    id="filled-dense"
+                    label="Objective (text area)"
+                    onChange={this.handleChange.bind(this)}
+                    margin="dense"
+                    variant="filled"
+                    name="objective"
+                  />
 
-              </>
+                </>
 
               )
 
@@ -674,24 +713,24 @@ class App extends Component {
               return (
                 <>
                   <TextField
-                id="filled-dense"
-                label="Hackathon Prize (text area)"
-                onChange={this.handleChange.bind(this)}
-                margin="dense"
-                variant="filled"
-                name="prize"
-              />
+                    id="filled-dense"
+                    label="Hackathon Prize (text area)"
+                    onChange={this.handleChange.bind(this)}
+                    margin="dense"
+                    variant="filled"
+                    name="prize"
+                  />
 
-                   <TextField
-              id="filled-dense"
-              label=" Hackathon Objective (text area)"
-              onChange={this.handleChange.bind(this)}
-              margin="dense"
-              variant="filled"
-              name="objective"
-            />
+                  <TextField
+                    id="filled-dense"
+                    label=" Hackathon Objective (text area)"
+                    onChange={this.handleChange.bind(this)}
+                    margin="dense"
+                    variant="filled"
+                    name="objective"
+                  />
 
-                       <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <Grid container className={classes.grid} justify="space-around">
                       <DatePicker
                         margin="normal"
@@ -712,7 +751,7 @@ class App extends Component {
                   </MuiPickersUtilsProvider>
 
 
-                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <Grid container className={classes.grid} justify="space-around">
                       <DatePicker
                         margin="normal"
@@ -757,13 +796,41 @@ class App extends Component {
 
 
 
-
+        <Button variant="contained" color="secondary" className={classes.button}>
+        Post Opportunity
+      </Button>
 
 
       </form>
 
+      
 
 
+
+<UserOutput
+  company ={this.state.company}
+  opportunity={this.state.opportunity}
+
+  title={this.state.opportunityName}
+  description={this.state.description}
+  website={this.state.urlWebsite}
+  backgroundImg={this.state.backgroundImage}
+
+  industry = {this.state.industryValues}
+  stage = {this.state.companyStage}
+  value={this.state.description}
+
+
+  startDate = {this.state.startDate}
+  endDate = {this.state.endDate}
+  location={this.state.location}
+
+ />
+ 
+
+   </Grid>
+
+        </>
     );
   }
 }
