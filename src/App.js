@@ -50,7 +50,9 @@ const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
   },
-
+textField:{
+  textAlign:"left"
+}
 
 });
 
@@ -141,7 +143,7 @@ class App extends Component {
   componentDidMount() {
     window.initMap = this.initMap
     const gmapScriptEl = document.createElement(`script`)
-    gmapScriptEl.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCIwrwTzpiNbYCNE3IrYNEeElIluiUrV8c&libraries=places&callback=initMap`
+    gmapScriptEl.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyChdxF5C-8-S_ox8kMQOqVYSr0rFl2mNho&libraries=places&callback=initMap`
     document.querySelector(`body`).insertAdjacentElement(`beforeend`, gmapScriptEl)
   }
 
@@ -289,6 +291,7 @@ class App extends Component {
         </FormControl>
         <FormControl className={classes.formControl}>
           <TextField
+             style={{textAlign:"left"}}
             required
             id="filled-multiline-flexible"
             label="Description"
